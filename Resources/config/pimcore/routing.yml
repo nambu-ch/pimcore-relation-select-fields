@@ -1,0 +1,4 @@
+
+_relationselectfields_admin_controller:
+    resource: "@RelationSelectFieldsBundle/Controller/Admin/"
+    type:     annotation

@@ -1,0 +1,5 @@
+"relationselectfieldsbundle_relationselect_folder": "Folder"
+"relationselectfieldsbundle_relationselect_recursive": "Recursive"
+"relationselectfieldsbundle_relationselect_fieldname": "Fieldname for display"
+"manyToOneRelationSelect": "Many-To-One Relation (Combobox)"
+"manyToManyRelationSelect": "Many-To-Many Relation (Combobox)"
