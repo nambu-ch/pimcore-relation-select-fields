@@ -1,0 +1,30 @@
+{
+  "name": "nambu-ch/pimcore-relation-select-fields",
+  "type": "pimcore-bundle",
+  "license": "GPL-3.0+",
+  "description": "Pimcore 6.x Relation-Fields for DataObjects and Documents",
+  "keywords": ["pimcore", "dataobject"],
+  "homepage": "https://github.com/nambu-ch/pimcore-relation-select-fields",
+  "authors": [
+    {
+      "name": "nambu GmbH Dominik Schnieper",
+      "email": "ds@nambu.ch",
+      "homepage": "https://www.nambu.ch/",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "ImageLoaderBundle\\": "src/RelationSelectFieldsBundle"
+    }
+  },
+  "extra": {
+    "pimcore": {
+      "bundles": [
+        "RelationSelectFieldsBundle\\RelationSelectFieldsBundle"
+      ]
+    }
+  },
+  "require": {
+  }
+}
