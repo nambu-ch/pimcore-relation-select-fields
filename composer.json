@@ -15,7 +15,7 @@
   ],
   "autoload": {
     "psr-4": {
-      "ImageLoaderBundle\\": "src/RelationSelectFieldsBundle"
+      "RelationSelectFieldsBundle\\": "src/RelationSelectFieldsBundle"
     }
   },
   "extra": {
