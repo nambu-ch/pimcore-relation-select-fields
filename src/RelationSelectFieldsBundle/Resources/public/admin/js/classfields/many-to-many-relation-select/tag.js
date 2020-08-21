@@ -1,14 +1,21 @@
 
-pimcore.registerNS("pimcore.object.tags.manyToOneRelationSelect");
-pimcore.object.tags.manyToOneRelationSelect = Class.create(pimcore.object.tags.manyToOneRelation, {
+pimcore.registerNS("pimcore.object.tags.manyToManyRelationSelect");
+pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.manyToManyRelation, {
 
-    type: "manyToOneRelationSelect",
+    type: "manyToManyRelationSelect",
     dataChanged: false,
 
     initialize: function (data, layoutConf) {
+        this.data = [];
         this.fieldConfig = layoutConf;
-        this.mode = 'remote';
         this.fieldConfig.index = 15008;
+        this.fieldConfig.classes =  this.fieldConfig.classes.filter(function (x) {
+            if(x.classes == 'folder') {
+                this.dataObjectFolderAllowed = true;
+                return false;
+            }
+            return true;
+        });
         if (data) {
             this.data = data;
         }
@@ -26,11 +33,14 @@ pimcore.object.tags.manyToOneRelationSelect = Class.create(pimcore.object.tags.m
             assetTypes: this.fieldConfig.assetTypes.map(function(i) { return i.assetTypes; }).join(','),
             documentTypes: this.fieldConfig.documentTypes.map(function(i) { return i.documentTypes; }).join(','),
         };
+        if (!this.fieldConfig.mandatory) {
+            storeParams.insertEmpty = 1;
+        }
 
         this.store = new Ext.data.JsonStore({
             proxy: {
                 type: 'ajax',
-                url: '/admin/object-fields/relation-select/objects-list?type=toone',
+                url: '/admin/object-fields/relation-select/objects-list?type=tomany',
                 extraParams: storeParams,
                 reader: {
                     type: 'json',
@@ -45,6 +55,8 @@ pimcore.object.tags.manyToOneRelationSelect = Class.create(pimcore.object.tags.m
                     if (!success) {
                         pimcore.helpers.showNotification(t("error"), t("error_loading_options"), "error", operation.getError());
                     }
+                    var selectedIds = this.data ? this.data.map(function(el) { return el.id } ) : null;
+                    this.component.setValue(selectedIds, null, true);
                 }.bind(this)
             },
             autoLoad: true
@@ -52,6 +64,7 @@ pimcore.object.tags.manyToOneRelationSelect = Class.create(pimcore.object.tags.m
     },
 
     getLayoutEdit: function () {
+        var selectedIds = this.data ? this.data.map(function(el) { return el.id } ) : null;
         var options = {
             name: this.fieldConfig.name,
             triggerAction: "all",
@@ -63,10 +76,14 @@ pimcore.object.tags.manyToOneRelationSelect = Class.create(pimcore.object.tags.m
             valueField: "id",
             labelWidth: this.fieldConfig.labelWidth ? this.fieldConfig.labelWidth : 100,
             autoLoadOnValue: true,
-            value: this.data ? this.data.id : null,
+            value: selectedIds,
             listeners: {
                 select: function (el) {
-                    console.log("many to one changed");
+                    this.data = this.store.data.items.map(function(item) {
+                        if (el.value.indexOf(item.id) >= 0) {
+                            return item.data;
+                        }
+                    });
                     this.dataChanged = true;
                 }.bind(this)
             },
@@ -92,7 +109,7 @@ pimcore.object.tags.manyToOneRelationSelect = Class.create(pimcore.object.tags.m
             options.value = this.data;
         }
 
-        this.component = Ext.create('Ext.form.ComboBox', options);
+        this.component = Ext.create('Ext.form.field.Tag', options);
 
         return this.component;
     },
@@ -106,10 +123,12 @@ pimcore.object.tags.manyToOneRelationSelect = Class.create(pimcore.object.tags.m
     },
 
     getValue: function() {
-        var selectedId = this.component.getValue();
-        return this.store.data.items.filter(function(item) {
-            return (selectedId === item.id);
-        })[0].data;
+        return this.store.data.items.map(function(item) {
+            if (this.component.getValue().indexOf(item.id) >= 0) {
+                return item.data;
+            }
+            return null;
+        }.bind(this));
     },
 
     isDirty:function () {

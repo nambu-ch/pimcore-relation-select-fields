@@ -1,21 +1,14 @@
 
-pimcore.registerNS("pimcore.object.tags.manyToManyRelationSelect");
-pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.manyToManyRelation, {
+pimcore.registerNS("pimcore.object.tags.manyToOneRelationSelect");
+pimcore.object.tags.manyToOneRelationSelect = Class.create(pimcore.object.tags.manyToOneRelation, {
 
-    type: "manyToManyRelationSelect",
+    type: "manyToOneRelationSelect",
     dataChanged: false,
 
     initialize: function (data, layoutConf) {
-        this.data = [];
         this.fieldConfig = layoutConf;
+        this.mode = 'remote';
         this.fieldConfig.index = 15008;
-        this.fieldConfig.classes =  this.fieldConfig.classes.filter(function (x) {
-            if(x.classes == 'folder') {
-                this.dataObjectFolderAllowed = true;
-                return false;
-            }
-            return true;
-        });
         if (data) {
             this.data = data;
         }
@@ -33,11 +26,14 @@ pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.
             assetTypes: this.fieldConfig.assetTypes.map(function(i) { return i.assetTypes; }).join(','),
             documentTypes: this.fieldConfig.documentTypes.map(function(i) { return i.documentTypes; }).join(','),
         };
+        if (!this.fieldConfig.mandatory) {
+            storeParams.insertEmpty = 1;
+        }
 
         this.store = new Ext.data.JsonStore({
             proxy: {
                 type: 'ajax',
-                url: '/admin/object-fields/relation-select/objects-list?type=tomany',
+                url: '/admin/object-fields/relation-select/objects-list?type=toone',
                 extraParams: storeParams,
                 reader: {
                     type: 'json',
@@ -52,8 +48,6 @@ pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.
                     if (!success) {
                         pimcore.helpers.showNotification(t("error"), t("error_loading_options"), "error", operation.getError());
                     }
-                    var selectedIds = this.data ? this.data.map(function(el) { return el.id } ) : null;
-                    this.component.setValue(selectedIds, null, true);
                 }.bind(this)
             },
             autoLoad: true
@@ -61,7 +55,6 @@ pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.
     },
 
     getLayoutEdit: function () {
-        var selectedIds = this.data ? this.data.map(function(el) { return el.id } ) : null;
         var options = {
             name: this.fieldConfig.name,
             triggerAction: "all",
@@ -73,14 +66,10 @@ pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.
             valueField: "id",
             labelWidth: this.fieldConfig.labelWidth ? this.fieldConfig.labelWidth : 100,
             autoLoadOnValue: true,
-            value: selectedIds,
+            value: this.data ? this.data.id : null,
             listeners: {
                 select: function (el) {
-                    this.data = this.store.data.items.map(function(item) {
-                        if (el.value.indexOf(item.id) >= 0) {
-                            return item.data;
-                        }
-                    });
+                    console.log("many to one changed");
                     this.dataChanged = true;
                 }.bind(this)
             },
@@ -106,7 +95,7 @@ pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.
             options.value = this.data;
         }
 
-        this.component = Ext.create('Ext.form.field.Tag', options);
+        this.component = Ext.create('Ext.form.ComboBox', options);
 
         return this.component;
     },
@@ -120,12 +109,10 @@ pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.
     },
 
     getValue: function() {
-        return this.store.data.items.map(function(item) {
-            if (this.component.getValue().indexOf(item.id) >= 0) {
-                return item.data;
-            }
-            return null;
-        }.bind(this));
+        var selectedId = this.component.getValue();
+        return this.store.data.items.filter(function(item) {
+            return (selectedId === item.id);
+        })[0].data;
     },
 
     isDirty:function () {

@@ -44,6 +44,19 @@ class RelationSelectController extends AdminController {
         }
 
         $options = [];
+        if ($request->get("insertEmpty", "0") === "1") {
+            $option = [
+                "value"     => "",
+                "key"       => "-- Choose --",
+                "display"   => "-- Choose --",
+                "id"        => "",
+                "published" => 1,
+                "index"     => 0,
+                "type"      => "",
+                "subtype"   => "",
+            ];
+            $options[] = $option;
+        }
         if ($objectsAllowed) {
             $options = array_merge(
                 $options,
