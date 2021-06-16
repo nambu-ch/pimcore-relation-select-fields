@@ -13,8 +13,8 @@ class Configuration implements ConfigurationInterface {
      * {@inheritdoc}
      */
     public function getConfigTreeBuilder() {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('relation_select_fields');
+        $treeBuilder = new TreeBuilder('relation_select_fields');
+        $rootNode = $treeBuilder->getRootNode();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
