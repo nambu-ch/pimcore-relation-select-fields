@@ -3,9 +3,9 @@ namespace RelationSelectFieldsBundle\Model\Document\Tag;
 use Pimcore\Model;
 
 /**
- * @method \Pimcore\Model\Document\Tag\Dao getDao()
+ * @method \Pimcore\Model\Document\Editable\Dao getDao()
  */
-class ManyToManyRelationSelect extends Model\Document\Tag\Relations implements \Iterator {
+class ManyToManyRelationSelect extends Model\Document\Editable\Relations implements \Iterator {
 
     /**
      * @return string

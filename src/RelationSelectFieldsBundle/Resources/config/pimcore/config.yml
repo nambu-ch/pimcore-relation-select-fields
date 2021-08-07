@@ -7,7 +7,7 @@ pimcore:
                     manyToOneRelationSelect: \RelationSelectFieldsBundle\Model\Object\Data\ManyToOneRelationSelect
                     manyToManyRelationSelect: \RelationSelectFieldsBundle\Model\Object\Data\ManyToManyRelationSelect
     documents:
-        tags:
+        editables:
             map:
                 relation_select: \RelationSelectFieldsBundle\Model\Document\Tag\ManyToOneRelationSelect
                 relations_select: \RelationSelectFieldsBundle\Model\Document\Tag\ManyToManyRelationSelect

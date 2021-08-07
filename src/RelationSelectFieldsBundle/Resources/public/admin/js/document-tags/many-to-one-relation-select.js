@@ -1,19 +1,23 @@
 
-pimcore.registerNS("pimcore.document.tags.relation_select");
-pimcore.document.tags.relation_select = Class.create(pimcore.document.tag, {
+pimcore.registerNS("pimcore.document.editables.relation_select");
+pimcore.document.editables.relation_select = Class.create(pimcore.document.editable, {
 
     store: null,
 
-    initialize: function(id, name, options, data, inherited) {
+    initialize: function(id, name, config, data, inherited) {
         this.id = id;
         this.name = name;
         this.setupWrapper();
-        options = this.parseOptions(options);
-        var jsonParams = this.parseOptions(options);
+        this.config = this.parseConfig(config);
+        this.config.name = id + "_editable";
 
-        if (data) {
-            options.value = data.id;
-        }
+        this.data = data;
+    },
+    
+    render: function () {
+        this.setupWrapper();
+        var jsonParams = this.parseConfig(this.config);
+
         if (jsonParams.types) {
             jsonParams.types = JSON.stringify(jsonParams.types);
         }
@@ -47,21 +51,22 @@ pimcore.document.tags.relation_select = Class.create(pimcore.document.tag, {
             autoLoad: true
         });
 
-        options.height = 'auto';
-        options.width = '100%';
-        options.store = this.store;
-        options.triggerAction = "all";
-        options.displayField = "display";
-        options.valueField = "id";
-        options.tpl = new Ext.XTemplate(
+        this.config.height = 'auto';
+        this.config.width = '100%';
+        this.config.store = this.store;
+        this.config.triggerAction = "all";
+        this.config.displayField = "display";
+        this.config.valueField = "id";
+        this.config.tpl = new Ext.XTemplate(
             '<tpl for="."><li role="option" unselectable="on" class="x-boundlist-item" data-recordid="{value}" style="display:flex;">',
             '  {key}<div class="combo-texture" style="margin-left:auto;font-style:italic;font-size:80%;">{type}</div>',
             '</li></tpl>'
         );
-        this.element = Ext.create('Ext.form.ComboBox', options);
+        this.element = Ext.create('Ext.form.ComboBox', this.config);
 
-        this.element.render(id);
+        this.element.render(this.id);
     },
+    
 
     getValue: function () {
         var selectedId = this.element.getValue();

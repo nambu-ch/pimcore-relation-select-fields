@@ -3,9 +3,9 @@ namespace RelationSelectFieldsBundle\Model\Document\Tag;
 use Pimcore\Model;
 
 /**
- * @method \Pimcore\Model\Document\Tag\Dao getDao()
+ * @method \Pimcore\Model\Document\Editable\Dao getDao()
  */
-class ManyToOneRelationSelect extends Model\Document\Tag\Relation {
+class ManyToOneRelationSelect extends Model\Document\Editable\Relation {
 
     /**
      * @return string
