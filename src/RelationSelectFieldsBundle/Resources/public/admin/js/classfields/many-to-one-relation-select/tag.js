@@ -59,6 +59,7 @@ pimcore.object.tags.manyToOneRelationSelect = Class.create(pimcore.object.tags.m
             name: this.fieldConfig.name,
             triggerAction: "all",
             editable: false,
+            selectOnFocus: false,
             fieldLabel: this.fieldConfig.title,
             store: this.store,
             componentCls: "object_field",
