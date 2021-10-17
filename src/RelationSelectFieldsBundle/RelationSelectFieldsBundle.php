@@ -9,8 +9,7 @@ class RelationSelectFieldsBundle extends AbstractPimcoreBundle {
 
     const PACKAGE_NAME = 'nambu-ch/pimcore-relation-select-fields';
 
-    protected function getComposerPackageName()
-    {
+    protected function getComposerPackageName(): string {
         return self::PACKAGE_NAME;
     }
 
