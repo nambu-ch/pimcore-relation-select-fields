@@ -23,3 +23,19 @@ services:
 #            - "@service_id"
 #            - "plain_value"
 #            - "%parameter%"
+
+    #
+    # DATAHUB
+    #
+
+    # The "Many-to-one select" datatype can act as a regular Href in GraphQL
+    pimcore.datahub.graphql.dataobjectquerytypegenerator_datatype_manytoonerelationselect:
+        class: Pimcore\Bundle\DataHubBundle\GraphQL\DataObjectQueryFieldConfigGenerator\Href
+        tags:
+            - { name: pimcore.datahub.graphql.dataobjectquerytypegenerator, id: typegenerator_dataobjectquerydatatype_manyToOneRelationSelect }
+
+    # The "Many-to-many select" datatype can act as a regular Multihref in GraphQL
+    pimcore.datahub.graphql.dataobjectquerytypegenerator_datatype_manytomanyrelationselect:
+        class: Pimcore\Bundle\DataHubBundle\GraphQL\DataObjectQueryFieldConfigGenerator\Multihref
+        tags:
+            - { name: pimcore.datahub.graphql.dataobjectquerytypegenerator, id: typegenerator_dataobjectquerydatatype_manyToManyRelationSelect }
