@@ -56,7 +56,9 @@ pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.
                         pimcore.helpers.showNotification(t("error"), t("error_loading_options"), "error", operation.getError());
                     }
                     var selectedIds = this.data ? this.data.map(function(el) { return el.id } ) : null;
-                    this.component.setValue(selectedIds, null, true);
+                    // if (this.component) {
+                        this.component.setValue(selectedIds, null, true);
+                    // }
                 }.bind(this)
             },
             autoLoad: true
@@ -124,12 +126,13 @@ pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.
     },
 
     getValue: function() {
-        return this.store.data.items.map(function(item) {
+        var value = this.store.data.items.map(function(item) {
             if (this.component.getValue().indexOf(item.id) >= 0) {
                 return item.data;
             }
             return null;
         }.bind(this));
+        return value.filter(function(item) { return item != null; });
     },
 
     isDirty:function () {
