@@ -18,6 +18,9 @@ pimcore.document.editables.relation_select = Class.create(pimcore.document.edita
         this.setupWrapper();
         var jsonParams = this.parseConfig(this.config);
 
+        if (this.data) {
+            this.config.value = this.data.id;
+        }
         if (jsonParams.types) {
             jsonParams.types = JSON.stringify(jsonParams.types);
         }
