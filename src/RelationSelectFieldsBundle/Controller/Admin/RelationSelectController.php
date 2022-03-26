@@ -171,24 +171,24 @@ class RelationSelectController extends AdminController {
             $conditions[] = "type IN ('".join("', '", $assetTypes)."')";
         }
 
-        $objects = new Asset\Listing();
-        $objects->setCondition(join(" AND ", $conditions), $conditionParams);
-        $objects->load();
+        $assets = new Asset\Listing();
+        $assets->setCondition(join(" AND ", $conditions), $conditionParams);
+        $assets->load();
 
-        foreach ($objects as $object) {
-            /** @var Asset $object */
+        foreach ($assets as $asset) {
+            /** @var Asset $asset */
             $option = [
-                "value"     => $object->getId(),
-                "key"       => $object->getFilename(),
-                "display"   => $object->getFilename(),
-                "id"        => $object->getId(),
+                "value"     => $asset->getId(),
+                "key"       => $asset->getFilename(),
+                "display"   => $asset->getFilename(),
+                "id"        => $asset->getId(),
                 "type"      => "asset",
                 "subtype"   => "asset",
             ];
             if ($request->get("type") === "tomany") {
-                $option["fullpath"] = $object->getFullPath();
+                $option["fullpath"] = $asset->getFullPath();
             } else {
-                $option["path"] = $object->getFullPath();
+                $option["path"] = $asset->getFullPath();
             }
 
             $options[] = $option;
@@ -197,6 +197,7 @@ class RelationSelectController extends AdminController {
     }
 
     private function getDocumentOptions(Request $request, bool $recursive): array {
+        $displayFieldName = $request->get("displayFieldName");
         $documentTypes = $request->get("documentTypes", "");
         $documentTypes = preg_split('/[,]+/', $documentTypes, -1, PREG_SPLIT_NO_EMPTY);
         $documentFolder = $request->get("documentFolder");
@@ -223,24 +224,28 @@ class RelationSelectController extends AdminController {
             $conditions[] = "type IN ('".join("', '", $documentTypes)."')";
         }
 
-        $objects = new Document\Listing();
-        $objects->setCondition(join(" AND ", $conditions), $conditionParams);
-        $objects->load();
+        $documents = new Document\Listing();
+        $documents->setCondition(join(" AND ", $conditions), $conditionParams);
+        $documents->load();
 
-        foreach ($objects as $object) {
-            /** @var Document $object */
+        foreach ($documents as $document) {
+            /** @var Document $document */
             $option = [
-                "value"     => $object->getId(),
-                "key"       => $object->getKey(),
-                "display"   => $object->getKey(),
-                "id"        => $object->getId(),
+                "value"     => $document->getId(),
+                "key"       => $document->getKey(),
+                "display"   => $document->getKey(),
+                "id"        => $document->getId(),
                 "type"      => "document",
                 "subtype"   => "document",
             ];
+            if (!empty($displayFieldName) && method_exists($document, "get".ucfirst($displayFieldName))) {
+                $option["key"] = $document->{"get".ucfirst($displayFieldName)}();
+                $option["display"] = $document->{"get".ucfirst($displayFieldName)}();
+            }
             if ($request->get("type") === "tomany") {
-                $option["fullpath"] = $object->getFullPath();
+                $option["fullpath"] = $document->getFullPath();
             } else {
-                $option["path"] = $object->getFullPath();
+                $option["path"] = $document->getFullPath();
             }
 
             $options[] = $option;
