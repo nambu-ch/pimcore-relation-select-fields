@@ -202,9 +202,9 @@ class RelationSelectController extends AdminController {
         $documentFolder = $request->get("documentFolder");
         $folder = null;
         if (intval($documentFolder) > 0) {
-            $folder = Asset::getById($documentFolder);
+            $folder = Document::getById($documentFolder);
         } else if (!empty($documentFolder)) {
-            $folder = Asset::getByPath($documentFolder);
+            $folder = Document::getByPath($documentFolder);
         }
 
         $options = array();
