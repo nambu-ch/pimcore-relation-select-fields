@@ -91,7 +91,7 @@ class RelationSelectController extends AdminController {
             $folder = DataObject::getByPath($objectFolder);
         }
 
-        $options = array();
+        $options = [];
         $conditions = [];
         $conditionParams = [];
         if ($folder instanceof DataObject) {
@@ -105,6 +105,10 @@ class RelationSelectController extends AdminController {
         }
         if (count($classes) > 0) {
             $conditions[] = "o_className IN ('".join("', '", $classes)."')";
+        }
+        if (!empty($request->get("query"))) {
+            $conditions[] = "(o_key LIKE :query OR o_id IN (SELECT id FROM search_backend_data WHERE maintype = 'object' AND data LIKE :query))";
+            $conditionParams["query"] = "%".$request->get("query")."%";
         }
 
         $objects = new DataObject\Listing();
@@ -155,7 +159,7 @@ class RelationSelectController extends AdminController {
             $folder = Asset::getByPath($assetFolder);
         }
 
-        $options = array();
+        $options = [];
         $conditions = [];
         $conditionParams = [];
         if ($folder instanceof Asset) {
@@ -168,7 +172,12 @@ class RelationSelectController extends AdminController {
             }
         }
         if (count($assetTypes) > 0) {
-            $conditions[] = "type IN ('".join("', '", $assetTypes)."')";
+            $conditions[] = "type IN (:assetTypes)";
+            $conditionParams["assetTypes"] = $assetTypes;
+        }
+        if (!empty($request->get("query"))) {
+            $conditions[] = "(filename LIKE :query OR id IN (SELECT id FROM search_backend_data WHERE maintype = 'asset' AND data LIKE :query))";
+            $conditionParams["query"] = "%".$request->get("query")."%";
         }
 
         $assets = new Asset\Listing();
@@ -178,12 +187,12 @@ class RelationSelectController extends AdminController {
         foreach ($assets as $asset) {
             /** @var Asset $asset */
             $option = [
-                "value"     => $asset->getId(),
-                "key"       => $asset->getFilename(),
-                "display"   => $asset->getFilename(),
-                "id"        => $asset->getId(),
-                "type"      => "asset",
-                "subtype"   => "asset",
+                "value"   => $asset->getId(),
+                "key"     => $asset->getFilename(),
+                "display" => $asset->getFilename(),
+                "id"      => $asset->getId(),
+                "type"    => "asset",
+                "subtype" => "asset",
             ];
             if ($request->get("type") === "tomany") {
                 $option["fullpath"] = $asset->getFullPath();
@@ -208,7 +217,7 @@ class RelationSelectController extends AdminController {
             $folder = Document::getByPath($documentFolder);
         }
 
-        $options = array();
+        $options = [];
         $conditions = [];
         $conditionParams = [];
         if ($folder instanceof Document) {
@@ -221,7 +230,12 @@ class RelationSelectController extends AdminController {
             }
         }
         if (count($documentTypes) > 0) {
-            $conditions[] = "type IN ('".join("', '", $documentTypes)."')";
+            $conditions[] = "type IN (:documentTypes)";
+            $conditionParams["documentTypes"] = $documentTypes;
+        }
+        if (!empty($request->get("query"))) {
+            $conditions[] = "(`key` LIKE :query OR id IN (SELECT id FROM search_backend_data WHERE maintype = 'document' AND data LIKE :query))";
+            $conditionParams["query"] = "%".$request->get("query")."%";
         }
 
         $documents = new Document\Listing();
@@ -231,12 +245,12 @@ class RelationSelectController extends AdminController {
         foreach ($documents as $document) {
             /** @var Document $document */
             $option = [
-                "value"     => $document->getId(),
-                "key"       => $document->getKey(),
-                "display"   => $document->getKey(),
-                "id"        => $document->getId(),
-                "type"      => "document",
-                "subtype"   => "document",
+                "value"   => $document->getId(),
+                "key"     => $document->getKey(),
+                "display" => $document->getKey(),
+                "id"      => $document->getId(),
+                "type"    => "document",
+                "subtype" => "document",
             ];
             if (!empty($displayFieldName) && method_exists($document, "get".ucfirst($displayFieldName))) {
                 $option["key"] = $document->{"get".ucfirst($displayFieldName)}();
