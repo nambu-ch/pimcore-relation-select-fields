@@ -101,6 +101,19 @@ pimcore.object.tags.manyToOneRelationSelect = Class.create(pimcore.object.tags.m
         return this.component;
     },
 
+    getRelationFilter: function (dataIndex, editor) {
+        var selection = editor.component.getSelection();
+        var filterValue = selection.data && selection.data.id !== undefined ? selection.data.type + "|" + selection.data.id : null;
+        return new Ext.util.Filter({
+            operator: "=",
+            type: "int",
+            id: "x-gridfilter-" + dataIndex,
+            property: dataIndex,
+            dataIndex: dataIndex,
+            value: filterValue === null ? 'null' : filterValue
+        });
+    },
+
     getGridColumnEditor:function (field) {
         return null;
     },

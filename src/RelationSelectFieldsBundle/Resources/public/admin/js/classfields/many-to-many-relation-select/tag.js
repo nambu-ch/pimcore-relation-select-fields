@@ -56,9 +56,7 @@ pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.
                         pimcore.helpers.showNotification(t("error"), t("error_loading_options"), "error", operation.getError());
                     }
                     var selectedIds = this.data ? this.data.map(function(el) { return el.id } ) : null;
-                    // if (this.component) {
-                        this.component.setValue(selectedIds, null, true);
-                    // }
+                    this.component.setValue(selectedIds, null, true);
                 }.bind(this)
             },
             autoLoad: true
@@ -115,6 +113,26 @@ pimcore.object.tags.manyToManyRelationSelect = Class.create(pimcore.object.tags.
         this.component = Ext.create('Ext.form.field.Tag', options);
 
         return this.component;
+    },
+
+    getRelationFilter: function (dataIndex, editor) {
+        var filterValues = editor.data;
+        if (!filterValues || !Array.isArray(filterValues) || !filterValues.length) {
+            filterValues = null;
+        } else {
+            filterValues = filterValues.filter(i => i !== undefined).map(function (item) {
+                return item.type + "|" + item.id;
+            }).join(',');
+        }
+
+        return new Ext.util.Filter({
+            operator: "like",
+            type: "string",
+            id: "x-gridfilter-" + dataIndex,
+            property: dataIndex,
+            dataIndex: dataIndex,
+            value: filterValues === null ? 'null' : filterValues
+        });
     },
 
     getGridColumnEditor:function (field) {
