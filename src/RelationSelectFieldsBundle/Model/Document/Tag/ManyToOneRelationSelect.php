@@ -12,7 +12,7 @@ class ManyToOneRelationSelect extends Model\Document\Editable\Relation {
      * @see TagInterface::getType
      *
      */
-    public function getType() {
+    public function getType(): string {
         return 'relation_select';
     }
 

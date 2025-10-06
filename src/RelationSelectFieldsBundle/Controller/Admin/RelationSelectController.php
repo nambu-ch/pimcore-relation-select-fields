@@ -1,9 +1,9 @@
 <?php
 namespace RelationSelectFieldsBundle\Controller\Admin;
+use Pimcore\Bundle\AdminBundle\Controller\AdminAbstractController;
 use Pimcore\Model\Asset;
 use Pimcore\Model\Document;
 use Pimcore\Model\DataObject;
-use Pimcore\Bundle\AdminBundle\Controller\AdminController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/admin/object-fields/relation-select")
  */
-class RelationSelectController extends AdminController {
+class RelationSelectController extends AdminAbstractController {
 
     /**
      * Produces the json to feed the roles selector
@@ -96,18 +96,18 @@ class RelationSelectController extends AdminController {
         $conditionParams = [];
         if ($folder instanceof DataObject) {
             if ($recursive) {
-                $conditions[] = "o_path LIKE :path";
+                $conditions[] = "path LIKE :path";
                 $conditionParams["path"] = $folder->getFullPath()."/%";
             } else {
-                $conditions[] = "o_parentId LIKE :parentId";
+                $conditions[] = "parentId LIKE :parentId";
                 $conditionParams["parentId"] = $folder->getId();
             }
         }
         if (count($classes) > 0) {
-            $conditions[] = "o_className IN ('".join("', '", $classes)."')";
+            $conditions[] = "className IN ('".join("', '", $classes)."')";
         }
         if (!empty($request->get("query"))) {
-            $conditions[] = "(o_key LIKE :query OR o_id IN (SELECT id FROM search_backend_data WHERE maintype = 'object' AND data LIKE :query))";
+            $conditions[] = "(key LIKE :query OR o_id IN (SELECT id FROM search_backend_data WHERE maintype = 'object' AND data LIKE :query))";
             $conditionParams["query"] = "%".$request->get("query")."%";
         }
 

@@ -34,7 +34,7 @@ class ManyToManyRelationSelect extends ClassDefinition\Data\ManyToManyRelation {
     /**
      * @return boolean
      */
-    public function getRecursive() {
+    public function getRecursive(): bool {
         return $this->recursive;
     }
 
@@ -42,7 +42,7 @@ class ManyToManyRelationSelect extends ClassDefinition\Data\ManyToManyRelation {
      * @param boolean $recursive
      * @return $this
      */
-    public function setRecursive($recursive) {
+    public function setRecursive($recursive): static {
         $this->recursive = $recursive;
         return $this;
     }
@@ -50,7 +50,7 @@ class ManyToManyRelationSelect extends ClassDefinition\Data\ManyToManyRelation {
     /**
      * @return string
      */
-    public function getDisplayFieldName() {
+    public function getDisplayFieldName(): string {
         return $this->displayFieldName;
     }
 
@@ -58,7 +58,7 @@ class ManyToManyRelationSelect extends ClassDefinition\Data\ManyToManyRelation {
      * @param string $displayFieldName
      * @return $this
      */
-    public function setDisplayFieldName($displayFieldName) {
+    public function setDisplayFieldName($displayFieldName): static {
         $this->displayFieldName = $displayFieldName;
         return $this;
     }
@@ -66,7 +66,7 @@ class ManyToManyRelationSelect extends ClassDefinition\Data\ManyToManyRelation {
     /**
      * @return string
      */
-    public function getObjectFolder() {
+    public function getObjectFolder(): string {
         return $this->objectFolder;
     }
 
@@ -74,7 +74,7 @@ class ManyToManyRelationSelect extends ClassDefinition\Data\ManyToManyRelation {
      * @param string $objectFolder
      * @return $this
      */
-    public function setObjectFolder($objectFolder) {
+    public function setObjectFolder($objectFolder): static {
         $this->objectFolder = $objectFolder;
         return $this;
     }
@@ -82,7 +82,7 @@ class ManyToManyRelationSelect extends ClassDefinition\Data\ManyToManyRelation {
     /**
      * @return string
      */
-    public function getAssetFolder() {
+    public function getAssetFolder(): string {
         return $this->assetFolder;
     }
 
@@ -90,7 +90,7 @@ class ManyToManyRelationSelect extends ClassDefinition\Data\ManyToManyRelation {
      * @param string $assetFolder
      * @return $this
      */
-    public function setAssetFolder($assetFolder) {
+    public function setAssetFolder($assetFolder): static {
         $this->assetFolder = $assetFolder;
         return $this;
     }
@@ -98,7 +98,7 @@ class ManyToManyRelationSelect extends ClassDefinition\Data\ManyToManyRelation {
     /**
      * @return string
      */
-    public function getDocumentFolder() {
+    public function getDocumentFolder(): string {
         return $this->documentFolder;
     }
 
@@ -106,7 +106,7 @@ class ManyToManyRelationSelect extends ClassDefinition\Data\ManyToManyRelation {
      * @param string $documentFolder
      * @return $this
      */
-    public function setDocumentFolder($documentFolder) {
+    public function setDocumentFolder($documentFolder): static {
         $this->documentFolder = $documentFolder;
         return $this;
     }
